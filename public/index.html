@@ -161,16 +161,16 @@
   .unit-300x250 h3{ font-size:14px; }
 
   /* ---- 300x600 hybrid: video card top (matches real 300x250), two list items below ---- */
-  .unit-300x600-hybrid{ width:300px; }
-  .unit-300x600-hybrid .unit-media{ height:130px; }
-  .unit-300x600-hybrid .unit-text{ padding:10px 16px 8px; }
-  .unit-300x600-hybrid .unit-text h3{ font-size:14px; margin:4px 0 8px; }
+  .unit-300x600-hybrid{ width:320px; }
+  .unit-300x600-hybrid .unit-media{ height:180px; }
+  .unit-300x600-hybrid .unit-text{ padding:12px 16px 10px; text-align:left; }
+  .unit-300x600-hybrid .unit-text h3{ font-size:15px; margin:4px 0 8px; }
   .unit-300x600-hybrid .unit-text .cta{ padding:6px 12px; font-size:12px; }
   .d-badge{
     position:absolute;
     bottom:10px;
     right:10px;
-    width:25px;
+    width:14px;
     opacity:0.55;
     z-index:3;
   }
@@ -180,14 +180,15 @@
   .list-item{
     display:flex;
     align-items:center;
-    gap:10px;
-    padding:10px 16px;
+    gap:12px;
+    padding:14px 16px;
     border-bottom:1px solid #eceff2;
+    text-align:left;
   }
   .list-item:last-child{ border-bottom:none; }
   .list-thumb{
-    width:56px;
-    height:56px;
+    width:80px;
+    height:80px;
     flex-shrink:0;
     border-radius:4px;
     overflow:hidden;
@@ -204,6 +205,7 @@
     line-height:1.35;
     color:var(--text-dark);
     font-weight:600;
+    text-align:left;
   }
   .list-item-provider{
     display:block;
@@ -211,6 +213,7 @@
     color:#8a8f98;
     font-weight:400;
     margin-top:3px;
+    text-align:left;
   }
 
   .size-label{
@@ -219,8 +222,9 @@
     letter-spacing:0.05em;
     text-transform:uppercase;
     margin-bottom:10px;
+    text-align:center;
   }
-  .block{ text-align:center; }
+  .block{ display:flex; flex-direction:column; align-items:center; }
 </style>
 </head>
 <body>
