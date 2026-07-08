@@ -50,7 +50,10 @@ const UNITS = {
       'Gift Guide':[
         {src:'assets/Screenshots/300x600/Gift Guide.png', caption:'Seasonal gift guide'},
       ],
-      'Video':[{type:'video', caption:'Autoplay video unit'}],
+      'Video':[
+        {type:'video', caption:'Autoplay video unit'},
+        {type:'video-hybrid', caption:'Video plus editorial feed'},
+      ],
     }
   },
   '300x250':{
@@ -87,6 +90,20 @@ const UNITS = {
       ],
       'Canvas':[
         {src:'assets/Screenshots/728x90/canvas-1.png', caption:'Branded canvas format'},
+      ],
+    }
+  },
+  'bespoke':{
+    label:'CUSTOM', name:'Bespoke Units',
+    desc:"Fully custom native integrations built to match any publisher's editorial environment.",
+    dimLabel:'Integration Type', dimensions:'Multi-format',
+    placeLabel:'Style', placement:'Editorial match',
+    formats:{
+      'Grid Layout':[
+        {src:'assets/Screenshots/Custom/Custom-1.png', caption:'Publisher grid style'},
+      ],
+      'Side-by-side':[
+        {src:'assets/Screenshots/Custom/Custom-2.png', caption:'Side-by-side style'},
       ],
     }
   },
@@ -129,10 +146,11 @@ document.querySelectorAll('.nav-item[data-page]').forEach(n => {
 // ── DISPATCHER ────────────────────────────────────────────────────────────────
 function renderPage(page, el) {
   el.dataset.rendered = '1';
-  if      (UNITS[page])     renderUnitPage(page, el);
-  else if (page==='bespoke') renderBespoke(el);
-  else if (page==='mocks')   renderMocks(el);
+  if      (UNITS[page])    renderUnitPage(page, el);
+  else if (page==='mocks') renderMocks(el);
 }
+
+const SIZE_CLASS = {'970x250':'size-970','300x600':'size-600','300x250':'size-250','728x90':'size-90'};
 
 // ── UNIT PAGE ─────────────────────────────────────────────────────────────────
 function renderUnitPage(key, el) {
@@ -146,15 +164,15 @@ function renderUnitPage(key, el) {
       <h1 class="page-title">${u.name}</h1>
       <p class="page-desc">${u.desc}</p>
       <div class="page-meta">
-        <div><div class="meta-label">Dimensions</div><div class="meta-value">${u.dimensions}</div></div>
-        <div><div class="meta-label">Placement</div><div class="meta-value">${u.placement}</div></div>
+        <div><div class="meta-label">${u.dimLabel||'Dimensions'}</div><div class="meta-value">${u.dimensions}</div></div>
+        <div><div class="meta-label">${u.placeLabel||'Placement'}</div><div class="meta-value">${u.placement}</div></div>
       </div>
       <hr class="page-divider">
       <div class="format-tabs" id="tabs-${key}">
         ${fmts.map(f=>`<button class="format-tab${f===uState[key].format?' active':''}" data-f="${f}">${f}</button>`).join('')}
       </div>
-      <div class="unit-stage-wrap">
-        <div id="stage-${key}" class="unit-stage"></div>
+      <div class="unit-stage-wrap ${SIZE_CLASS[key]||''}">
+        <div class="unit-frame"><div id="stage-${key}" class="unit-stage"></div></div>
         <div class="variation-nav" id="vnav-${key}">
           <button class="var-arrow" id="prev-${key}">←</button>
           <div class="var-dots" id="dots-${key}"></div>
@@ -183,7 +201,8 @@ function drawStage(key) {
   drawDots(key, vars.length);
   setCaption(key, vars[s.varIdx].caption);
   setArrows(key, vars.length);
-  if (vars[s.varIdx].type==='video') initVideo(key);
+  if (vars[s.varIdx].type==='video' || vars[s.varIdx].type==='video-hybrid') initVideo(key);
+  if (vars[s.varIdx].type==='video-hybrid') initHybridThumbs(key);
 }
 
 // ── CARD BUILDER ──────────────────────────────────────────────────────────────
@@ -217,7 +236,7 @@ function makeCard(key, v) {
     } else if (key === '300x600') {
       c.innerHTML = `
         <div style="width:300px;background:#fff;">
-          <div style="position:relative;height:200px;background:#000;overflow:hidden;">
+          <div style="position:relative;height:225px;background:#000;overflow:hidden;">
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
@@ -226,9 +245,9 @@ function makeCard(key, v) {
               <button class="vc-btn mu">🔊</button>
             </div>
           </div>
-          <div class="vu-text" style="padding:14px 16px;">
+          <div class="vu-text" style="padding:16px 16px 14px;">
             <span class="sp-label">Sponsored Content</span>
-            <h3 style="font-size:14px;">We go deep on the details so you can scale AI across your business</h3>
+            <h3 style="font-size:15px;">We go deep on the details so you can scale AI across your business</h3>
             <span class="vu-provider">PWC</span>
             <button class="vu-cta">Learn More</button>
           </div>
@@ -255,6 +274,36 @@ function makeCard(key, v) {
           <img class="d-badge" src="assets/brand/d-icon.svg" alt="">
         </div>`;
     }
+  } else if (v.type === 'video-hybrid') {
+    c.innerHTML = `
+      <div style="width:300px;background:#fff;">
+        <div style="position:relative;height:150px;background:#000;overflow:hidden;">
+          <div class="video-shimmer"></div>
+          <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+          <button class="lm-btn">Learn More</button>
+          <div class="vc-overlay">
+            <button class="vc-btn pp">⏸</button>
+            <button class="vc-btn mu">🔊</button>
+          </div>
+        </div>
+        <div class="vu-text" style="padding:12px 16px 10px;">
+          <span class="sp-label">Sponsored Content</span>
+          <h3 style="font-size:14px;">We go deep on the details so you can scale AI across your business</h3>
+          <span class="vu-provider">PWC</span>
+          <button class="vu-cta" style="padding:6px 12px;font-size:12px;">Learn More</button>
+        </div>
+        <div style="border-top:1px solid #eceff2;">
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #eceff2;text-align:left;">
+            <div style="width:64px;height:64px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-1" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
+            <div style="font-size:12px;line-height:1.35;color:#1a2b4a;font-weight:600;text-align:left;">Get up to AED 14,000 cashback with HSBC Premier<span style="display:block;font-size:10px;color:#8a8f98;font-weight:400;margin-top:3px;">HSBC</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;text-align:left;">
+            <div style="width:64px;height:64px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-2" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
+            <div style="font-size:12px;line-height:1.35;color:#1a2b4a;font-weight:600;text-align:left;">The Fragmentation Era<span style="display:block;font-size:10px;color:#8a8f98;font-weight:400;margin-top:3px;">PIMCO</span></div>
+          </div>
+        </div>
+        <img class="d-badge" src="assets/brand/d-icon.svg" alt="">
+      </div>`;
   } else {
     // Screenshot card — no d-badge (screenshots already have it baked in)
     c.innerHTML = `<img class="main-img" src="${v.src}" alt="" loading="lazy">`;
@@ -352,6 +401,31 @@ function setArrows(key, total) {
   if (nav) nav.style.display = total<=1 ? 'none' : 'flex';
 }
 
+// ── PEXELS PHOTOS (hybrid unit thumbnails) ────────────────────────────────────
+async function fetchPhoto(q) {
+  const cacheKey = 'photo:' + q;
+  if (vcache[cacheKey]) return vcache[cacheKey];
+  try {
+    const r = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=1`,
+      {headers:{Authorization:PEXELS_KEY}}
+    );
+    const d = await r.json();
+    const url = d.photos?.[0]?.src?.medium || null;
+    if (url) vcache[cacheKey] = url;
+    return url;
+  } catch(e){ return null; }
+}
+
+function initHybridThumbs(key) {
+  const card = $('card-' + key);
+  if (!card) return;
+  const t1 = card.querySelector('.hy-thumb-1');
+  const t2 = card.querySelector('.hy-thumb-2');
+  if (t1) fetchPhoto('finance office').then(url => { if (url) t1.src = url; });
+  if (t2) fetchPhoto('global economy').then(url => { if (url) t2.src = url; });
+}
+
 // ── PEXELS VIDEO ──────────────────────────────────────────────────────────────
 async function fetchClip(q) {
   if (vcache[q]) return vcache[q];
@@ -394,27 +468,6 @@ function initVideo(key) {
     video.muted=!video.muted;
     mu.textContent=video.muted?'🔇':'🔊';
   });
-}
-
-// ── BESPOKE ───────────────────────────────────────────────────────────────────
-function renderBespoke(el) {
-  el.innerHTML = `
-    <div class="page-inner">
-      <div class="page-category">Custom</div>
-      <h1 class="page-title">Bespoke Units</h1>
-      <p class="page-desc">Fully custom native integrations built to match any publisher's editorial environment.</p>
-      <hr class="page-divider">
-      <div class="bespoke-grid">
-        <div class="bespoke-card" onclick="openLB('assets/Screenshots/Custom/Custom-1.png')">
-          <img src="assets/Screenshots/Custom/Custom-1.png" alt="" loading="lazy">
-          <div class="bespoke-label">Custom integration 01</div>
-        </div>
-        <div class="bespoke-card" onclick="openLB('assets/Screenshots/Custom/Custom-2.png')">
-          <img src="assets/Screenshots/Custom/Custom-2.png" alt="" loading="lazy">
-          <div class="bespoke-label">Custom integration 02</div>
-        </div>
-      </div>
-    </div>`;
 }
 
 // ── MOCKS ─────────────────────────────────────────────────────────────────────
