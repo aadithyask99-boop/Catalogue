@@ -2,181 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Dianomi — Publisher Catalogue</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --teal: #52AF97;
-  --teal-light: rgba(82,175,151,0.08);
-  --bg: #F5F5F5;
-  --dark: #1a2b4a;
-  --white: #fff;
-  --muted: #8a8f98;
-  --border: #e8eaed;
-  --sidebar-w: 220px;
-  --shadow-card: 0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.05);
+:root{
+  --teal:#52AF97;
+  --teal-light:rgba(82,175,151,0.08);
+  --bg:#F5F5F5;
+  --dark:#1a2b4a;
+  --white:#fff;
+  --muted:#8a8f98;
+  --border:#e8eaed;
+  --sidebar-w:220px;
+  --shadow:0 4px 24px rgba(0,0,0,0.08),0 1px 4px rgba(0,0,0,0.04);
 }
-*{ box-sizing:border-box; margin:0; padding:0; }
-body{ font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--dark); display:flex; min-height:100vh; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);display:flex;min-height:100vh;}
 
-/* ── SIDEBAR ── */
-.sidebar{ width:var(--sidebar-w); height:100vh; position:fixed; top:0; left:0; background:var(--white); border-right:1px solid var(--border); display:flex; flex-direction:column; z-index:100; overflow-y:auto; }
-.sidebar-logo{ padding:28px 24px 22px; border-bottom:1px solid var(--border); }
-.sidebar-logo img{ height:18px; }
-.nav-group{ padding:14px 0 6px; }
-.nav-group-label{ font-size:9px; font-weight:700; letter-spacing:0.12em; color:var(--muted); text-transform:uppercase; padding:0 24px 6px; display:block; }
-.nav-item{ display:block; padding:9px 24px; font-size:12px; font-weight:600; color:var(--dark); cursor:pointer; border-left:3px solid transparent; transition:color 120ms,background 120ms,border-color 120ms; user-select:none; }
-.nav-item:hover{ background:var(--teal-light); }
-.nav-item.active{ color:var(--teal); border-left-color:var(--teal); background:var(--teal-light); }
-.nav-item.sub{ padding-left:36px; font-size:11px; font-weight:500; }
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);height:100vh;position:fixed;top:0;left:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-x:hidden;overflow-y:auto;transition:width 220ms ease;}
+.sidebar-logo{padding:26px 20px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:relative;min-height:20px;}
+.sidebar-logo img.logo-full{height:17px;transition:opacity 150ms;}
+.sidebar-logo .logo-mini{display:none;font-size:16px;font-weight:700;color:var(--teal);}
+.collapse-btn{width:22px;height:22px;border:1.5px solid var(--teal);border-radius:4px;background:var(--white);color:var(--teal);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:'Montserrat',sans-serif;line-height:1;transition:transform 150ms;}
+.collapse-btn:hover{background:var(--teal-light);}
+.nav-group{padding:12px 0 4px;}
+.nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;padding:0 24px 6px;display:block;white-space:nowrap;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 24px;font-size:12px;font-weight:600;color:var(--dark);cursor:pointer;border-left:3px solid transparent;transition:color 120ms,background 120ms,border-color 120ms;user-select:none;white-space:nowrap;}
+.nav-item:hover{background:var(--teal-light);}
+.nav-item.active{color:var(--teal);border-left-color:var(--teal);background:var(--teal-light);}
+.nav-item.sub{padding-left:36px;font-size:11px;font-weight:500;}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:0.85;}
+.nav-item.active .nav-icon{opacity:1;}
+.nav-label{transition:opacity 120ms;}
 
-/* ── MAIN ── */
-.main{ margin-left:var(--sidebar-w); flex:1; min-height:100vh; }
-.page{ display:none; }
-.page.active{ display:block; }
+/* COLLAPSED STATE */
+.sidebar.collapsed{width:64px;}
+.sidebar.collapsed .sidebar-logo{padding:20px 0;justify-content:center;}
+.sidebar.collapsed .logo-full{display:none;}
+.sidebar.collapsed .logo-mini{display:block;}
+.sidebar.collapsed .collapse-btn{position:absolute;top:-2px;right:6px;}
+.sidebar.collapsed .nav-group-label,
+.sidebar.collapsed .nav-label{display:none;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:11px 0;border-left:none;}
+.sidebar.collapsed .nav-item.sub{padding-left:0;}
+.sidebar.collapsed .nav-item.active{background:var(--teal-light);box-shadow:inset 3px 0 0 var(--teal);}
+.sidebar.collapsed ~ .main,
+body.sidebar-collapsed .main{margin-left:64px;}
 
-/* ── HERO ── */
-#page-hero{ min-height:100vh; background:var(--teal); display:flex; align-items:center; padding:0 80px; gap:60px; }
-.hero-text{ flex:1; }
-.hero-logo{ margin-bottom:36px; }
-.hero-logo img{ height:20px; filter:brightness(0) invert(1); opacity:0.9; }
-.hero-text h1{ font-size:54px; font-weight:700; color:var(--white); line-height:1.1; margin-bottom:16px; }
-.hero-text p{ font-size:15px; color:rgba(255,255,255,0.7); line-height:1.7; font-weight:400; margin-bottom:36px; max-width:400px; }
-.hero-cta{ background:var(--white); color:var(--teal); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; padding:14px 28px; border-radius:6px; border:none; cursor:pointer; letter-spacing:0.02em; transition:transform 150ms,box-shadow 150ms; }
-.hero-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.15); }
-.hero-visual{ flex:1; display:flex; align-items:center; justify-content:center; }
-.hero-d{ font-size:300px; font-weight:700; color:rgba(255,255,255,0.07); line-height:1; user-select:none; }
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;transition:margin-left 220ms ease;}
+.page{display:none;}
+.page.active{display:block;}
 
-/* ── PAGE HEADER ── */
-.page-inner{ padding:52px 64px; max-width:1140px; }
-.page-category{ font-size:10px; font-weight:700; letter-spacing:0.12em; color:var(--teal); text-transform:uppercase; margin-bottom:10px; }
-.page-title{ font-size:44px; font-weight:700; color:var(--dark); margin-bottom:12px; line-height:1.1; }
-.page-desc{ font-size:14px; font-style:italic; color:var(--muted); max-width:480px; line-height:1.65; margin-bottom:28px; }
-.page-meta{ display:flex; gap:48px; margin-bottom:32px; }
-.meta-label{ font-size:10px; font-weight:700; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
-.meta-value{ font-size:14px; font-weight:700; color:var(--dark); }
-.page-divider{ border:none; border-top:1px solid var(--border); margin-bottom:36px; }
+/* HERO — styles on inner div, NOT on #page-hero to avoid specificity conflict */
+.hero-inner{min-height:100vh;background:var(--teal);display:flex;align-items:center;padding:0 80px;gap:60px;}
+.hero-logo{margin-bottom:32px;}
+.hero-logo img{height:19px;filter:brightness(0) invert(1);opacity:0.9;}
+.hero-text h1{font-size:52px;font-weight:700;color:var(--white);line-height:1.1;margin-bottom:14px;}
+.hero-text p{font-size:14px;color:rgba(255,255,255,0.7);line-height:1.75;font-weight:400;margin-bottom:34px;max-width:380px;}
+.hero-cta{background:var(--white);color:var(--teal);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;padding:13px 26px;border-radius:6px;border:none;cursor:pointer;letter-spacing:0.02em;transition:transform 150ms,box-shadow 150ms;}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
+.hero-visual{flex:1;display:flex;align-items:center;justify-content:center;}
+.hero-d{font-size:280px;font-weight:700;color:rgba(255,255,255,0.07);line-height:1;user-select:none;}
 
-/* ── FORMAT TABS ── */
-.format-tabs{ display:flex; gap:8px; margin-bottom:40px; flex-wrap:wrap; }
-.format-tab{ padding:8px 18px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; border-radius:40px; border:1.5px solid var(--teal); background:transparent; color:var(--teal); cursor:pointer; transition:background 150ms,color 150ms; }
-.format-tab:hover{ background:var(--teal-light); }
-.format-tab.active{ background:var(--teal); color:var(--white); }
+/* PAGE HEADER */
+.page-inner{padding:52px 64px;max-width:1140px;}
+.page-category{font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--teal);text-transform:uppercase;margin-bottom:10px;}
+.page-title{font-size:42px;font-weight:700;color:var(--dark);margin-bottom:12px;line-height:1.1;}
+.page-desc{font-size:14px;font-style:italic;color:var(--muted);max-width:480px;line-height:1.65;margin-bottom:26px;}
+.page-meta{display:flex;gap:44px;margin-bottom:30px;}
+.meta-label{font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+.meta-value{font-size:14px;font-weight:700;color:var(--dark);}
+.page-divider{border:none;border-top:1px solid var(--border);margin-bottom:34px;}
 
-/* ── UNIT STAGE ── */
-.unit-stage-wrap{ display:flex; flex-direction:column; align-items:center; gap:20px; }
-.unit-stage{ position:relative; }
-.unit-card{ border-radius:8px; box-shadow:var(--shadow-card); overflow:hidden; position:relative; will-change:transform,opacity; }
-.unit-card img.main-img{ display:block; width:100%; height:auto; }
-.d-badge{ position:absolute; bottom:10px; right:10px; width:14px; opacity:0.5; z-index:2; pointer-events:none; }
+/* FORMAT TABS */
+.format-tabs{display:flex;gap:8px;margin-bottom:36px;flex-wrap:wrap;}
+.format-tab{padding:7px 16px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;border-radius:40px;border:1.5px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer;transition:background 120ms,color 120ms;}
+.format-tab:hover{background:var(--teal-light);}
+.format-tab.active{background:var(--teal);color:var(--white);}
 
-/* ── VARIATION NAV ── */
-.variation-nav{ display:flex; align-items:center; gap:16px; }
-.var-arrow{ width:36px; height:36px; border-radius:50%; border:1.5px solid var(--border); background:var(--white); color:var(--dark); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color 150ms,color 150ms; box-shadow:0 1px 4px rgba(0,0,0,0.06); font-family:'Montserrat',sans-serif; }
-.var-arrow:hover:not(:disabled){ border-color:var(--teal); color:var(--teal); }
-.var-arrow:disabled{ opacity:0.3; cursor:default; }
-.var-dots{ display:flex; gap:6px; align-items:center; }
-.var-dot{ width:6px; height:6px; border-radius:50%; background:var(--border); cursor:pointer; transition:background 150ms,transform 150ms; }
-.var-dot.active{ background:var(--teal); transform:scale(1.35); }
-.var-caption{ font-size:11px; color:var(--muted); font-weight:500; letter-spacing:0.03em; text-align:center; min-height:18px; transition:opacity 200ms; }
+/* UNIT STAGE */
+.unit-stage-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;}
+.unit-stage{perspective:1600px;position:relative;}
+.unit-card{border-radius:8px;box-shadow:var(--shadow);overflow:hidden;position:relative;backface-visibility:hidden;}
+.unit-card img.main-img{display:block;width:100%;height:auto;}
 
-/* ── VIDEO ── */
-.video-unit{ position:relative; background:#000; }
-.video-unit video{ display:block; width:100%; }
-.video-shimmer{ position:absolute; inset:0; background:linear-gradient(90deg,#0a0a0a,#1a1a1a,#0a0a0a); background-size:200% 100%; animation:shimmer 1.4s infinite; z-index:2; }
-@keyframes shimmer{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
-.vc-overlay{ position:absolute; bottom:10px; left:10px; display:flex; gap:8px; z-index:3; }
-.vc-btn{ width:28px; height:28px; border-radius:50%; border:none; background:rgba(0,0,0,0.55); color:#fff; font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; }
-.vc-btn:hover{ background:rgba(0,0,0,0.8); }
-.lm-btn{ position:absolute; top:12px; right:12px; background:#fff; color:var(--dark); border:none; padding:7px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; font-family:'Montserrat',sans-serif; z-index:3; }
+/* VARIATION NAV */
+.variation-nav{display:flex;align-items:center;gap:14px;}
+.var-arrow{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:var(--white);color:var(--dark);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 120ms,color 120ms;box-shadow:0 1px 4px rgba(0,0,0,0.06);font-family:'Montserrat',sans-serif;}
+.var-arrow:hover:not(:disabled){border-color:var(--teal);color:var(--teal);}
+.var-arrow:disabled{opacity:0.28;cursor:default;}
+.var-dots{display:flex;gap:6px;align-items:center;}
+.var-dot{width:6px;height:6px;border-radius:50%;background:var(--border);cursor:pointer;transition:background 150ms,transform 150ms;}
+.var-dot.active{background:var(--teal);transform:scale(1.3);}
+.var-caption{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:0.03em;text-align:center;min-height:16px;transition:opacity 180ms;}
 
-/* ── BESPOKE ── */
-.bespoke-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-.bespoke-card{ border-radius:8px; overflow:hidden; box-shadow:var(--shadow-card); cursor:pointer; transition:transform 200ms,box-shadow 200ms; background:var(--white); }
-.bespoke-card:hover{ transform:scale(1.02); box-shadow:0 8px 32px rgba(0,0,0,0.13); }
-.bespoke-card img{ display:block; width:100%; height:auto; }
-.bespoke-label{ padding:12px 16px; font-size:11px; font-weight:600; color:var(--muted); letter-spacing:0.04em; text-transform:uppercase; }
+/* VIDEO UNITS */
+.d-badge{position:absolute;bottom:10px;right:10px;width:14px;opacity:0.5;z-index:2;pointer-events:none;}
+.video-shimmer{position:absolute;inset:0;background:linear-gradient(90deg,#0d0d0d,#1c1c1c,#0d0d0d);background-size:200% 100%;animation:shimmer 1.4s infinite;z-index:2;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.vc-overlay{position:absolute;bottom:10px;left:10px;display:flex;gap:8px;z-index:3;}
+.vc-btn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,0.55);color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;}
+.vc-btn:hover{background:rgba(0,0,0,0.8);}
+.lm-btn{position:absolute;top:12px;right:12px;background:#fff;color:var(--dark);border:none;padding:7px 12px;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;z-index:3;}
+.vu-text .sp-label{font-size:10px;font-weight:700;letter-spacing:0.08em;color:#5b6b85;text-transform:uppercase;display:block;margin-bottom:7px;}
+.vu-text h3{font-size:15px;font-weight:700;color:var(--dark);margin:0 0 8px;line-height:1.3;}
+.vu-text .vu-provider{font-size:11px;color:var(--muted);margin-bottom:10px;display:block;}
+.vu-cta{background:#1f4fd8;color:#fff;border:none;padding:8px 14px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;}
 
-/* ── MOCKS ── */
-.mock-tabs{ display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap; }
-.mock-tab{ padding:8px 18px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; border-radius:40px; border:1.5px solid var(--teal); background:transparent; color:var(--teal); cursor:pointer; transition:background 150ms,color 150ms; }
-.mock-tab:hover{ background:var(--teal-light); }
-.mock-tab.active{ background:var(--teal); color:var(--white); }
-.mock-layout{ display:flex; gap:32px; align-items:flex-start; }
-.mock-meta{ width:190px; flex-shrink:0; }
-.mock-meta-item{ margin-bottom:22px; }
-.mock-frame-area{ flex:1; }
-.device-toggle{ display:flex; gap:8px; margin-bottom:14px; }
-.device-btn{ padding:6px 14px; font-size:11px; font-weight:600; font-family:'Montserrat',sans-serif; border-radius:40px; border:1.5px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:all 150ms; }
-.device-btn.active{ border-color:var(--teal); color:var(--teal); background:var(--teal-light); }
-.mock-frame{ border-radius:8px; box-shadow:var(--shadow-card); overflow:hidden; height:80vh; overflow-y:scroll; position:relative; transition:width 300ms ease,margin 300ms ease,border-radius 300ms ease,border 300ms ease; }
-.mock-frame img{ display:block; width:100%; height:auto; }
-.mock-frame.mobile-view{ width:390px; margin:0 auto; border-radius:28px; border:8px solid var(--dark); }
-.scroll-hint{ position:sticky; bottom:12px; text-align:center; font-size:10px; font-weight:600; letter-spacing:0.06em; color:var(--muted); pointer-events:none; transition:opacity 400ms; padding:6px; }
-.scroll-hint.hidden{ opacity:0; }
+/* BESPOKE */
+.bespoke-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:700px;}
+.bespoke-card{border-radius:8px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform 180ms,box-shadow 180ms;background:var(--white);}
+.bespoke-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.12);}
+.bespoke-card img{display:block;width:100%;height:220px;object-fit:cover;object-position:top;}
+.bespoke-label{padding:10px 14px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;}
 
-/* ── LIGHTBOX ── */
-.lightbox{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:999; align-items:center; justify-content:center; }
-.lightbox.open{ display:flex; }
-.lightbox img{ max-width:90vw; max-height:90vh; border-radius:8px; }
-.lightbox-close{ position:absolute; top:20px; right:28px; color:#fff; font-size:28px; cursor:pointer; background:none; border:none; font-family:'Montserrat',sans-serif; }
+/* MOCKS */
+.mock-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+.mock-tab{padding:7px 16px;font-size:12px;font-weight:600;font-family:'Montserrat',sans-serif;border-radius:40px;border:1.5px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer;transition:background 120ms,color 120ms;}
+.mock-tab:hover{background:var(--teal-light);}
+.mock-tab.active{background:var(--teal);color:var(--white);}
+.mock-layout{display:flex;gap:28px;align-items:flex-start;}
+.mock-meta{width:180px;flex-shrink:0;}
+.mock-meta-item{margin-bottom:20px;}
+.mock-frame-area{flex:1;}
+.device-toggle{display:flex;gap:8px;margin-bottom:12px;}
+.device-btn{padding:6px 14px;font-size:11px;font-weight:600;font-family:'Montserrat',sans-serif;border-radius:40px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 120ms;}
+.device-btn.active{border-color:var(--teal);color:var(--teal);background:var(--teal-light);}
+.mock-frame{border-radius:10px;border:2px solid var(--teal);box-shadow:var(--shadow);overflow:hidden;height:80vh;overflow-y:scroll;position:relative;transition:width 300ms ease,margin 300ms ease,border-radius 300ms ease;}
+.mock-frame img{display:block;width:100%;height:auto;}
+.mock-frame.mobile-view{width:375px;margin:0 auto;border-radius:28px;border:3px solid var(--teal);}
+.scroll-hint{position:sticky;bottom:10px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.05em;color:var(--muted);pointer-events:none;transition:opacity 400ms;padding:5px;}
+.scroll-hint.hidden{opacity:0;}
+.mock-loading{display:flex;align-items:center;justify-content:center;height:200px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:0.04em;}
 
-/* ── ABOUT ── */
-.about-contact{ margin-top:32px; font-size:13px; font-weight:700; color:var(--teal); text-decoration:none; display:inline-block; }
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:999;align-items:center;justify-content:center;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;}
+.lightbox-close{position:absolute;top:20px;right:28px;color:#fff;font-size:26px;cursor:pointer;background:none;border:none;font-family:'Montserrat',sans-serif;}
+
+/* ABOUT */
+.about-link{margin-top:28px;font-size:13px;font-weight:700;color:var(--teal);text-decoration:none;display:inline-block;}
 </style>
 </head>
 <body>
 
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <img src="assets/brand/dianomi-logo.svg" alt="Dianomi">
+    <img src="assets/brand/dianomi-logo.svg" alt="Dianomi" class="logo-full">
+    <span class="logo-mini">D</span>
+    <button class="collapse-btn" id="collapseBtn" aria-label="Toggle sidebar">
+      <span id="collapseIcon">‹</span>
+    </button>
   </div>
   <div class="nav-group">
-    <span class="nav-item" data-page="hero">Overview</span>
+    <span class="nav-item" data-page="hero">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 12l3.5-3.5"/><path d="M8 12h.01"/></svg>
+      <span class="nav-label">Overview</span>
+    </span>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">IAB Units</span>
-    <span class="nav-item sub" data-page="970x250">970 × 250</span>
-    <span class="nav-item sub" data-page="300x600">300 × 600</span>
-    <span class="nav-item sub" data-page="300x250">300 × 250</span>
-    <span class="nav-item sub" data-page="728x90">728 × 90</span>
+    <span class="nav-item sub" data-page="970x250">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="8" rx="1.5"/></svg>
+      <span class="nav-label">970 × 250</span>
+    </span>
+    <span class="nav-item sub" data-page="300x600">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="3" width="10" height="18" rx="1.5"/></svg>
+      <span class="nav-label">300 × 600</span>
+    </span>
+    <span class="nav-item sub" data-page="300x250">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="7" width="14" height="10" rx="1.5"/></svg>
+      <span class="nav-label">300 × 250</span>
+    </span>
+    <span class="nav-item sub" data-page="728x90">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="10" width="18" height="4" rx="1"/></svg>
+      <span class="nav-label">728 × 90</span>
+    </span>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">Custom</span>
-    <span class="nav-item" data-page="bespoke">Bespoke Units</span>
+    <span class="nav-item" data-page="bespoke">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="1.3"/><rect x="13" y="3" width="8" height="8" rx="1.3"/><rect x="3" y="13" width="8" height="8" rx="1.3"/><rect x="13" y="13" width="8" height="8" rx="1.3"/></svg>
+      <span class="nav-label">Bespoke Units</span>
+    </span>
   </div>
   <div class="nav-group">
     <span class="nav-group-label">Real Work</span>
-    <span class="nav-item" data-page="mocks">Publisher Mocks</span>
+    <span class="nav-item" data-page="mocks">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="9" r="1.4"/><path d="M21 15l-5-5-9 9"/></svg>
+      <span class="nav-label">Publisher Mocks</span>
+    </span>
   </div>
   <div class="nav-group">
-    <span class="nav-item" data-page="about">About</span>
+    <span class="nav-item" data-page="about">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+      <span class="nav-label">About</span>
+    </span>
   </div>
 </nav>
 
 <main class="main">
 
+  <!-- HERO — inner div carries the styles, section is just the page shell -->
   <section id="page-hero" class="page active">
-    <div style="min-height:100vh;background:var(--teal);display:flex;align-items:center;padding:0 80px;gap:60px;">
+    <div class="hero-inner">
       <div class="hero-text">
         <div class="hero-logo"><img src="assets/brand/dianomi-logo.svg" alt="Dianomi"></div>
         <h1>Your content.<br>Perfectly placed.</h1>
         <p>Premium native, video, display and canvas formats built for the world's leading financial publishers.</p>
         <button class="hero-cta" onclick="navigate('970x250')">Explore formats →</button>
       </div>
-      <div class="hero-visual">
-        <div class="hero-d">D</div>
-      </div>
+      <div class="hero-visual"><div class="hero-d">D</div></div>
     </div>
   </section>
 
   <section id="page-970x250" class="page"></section>
   <section id="page-300x600" class="page"></section>
   <section id="page-300x250" class="page"></section>
-  <section id="page-728x90" class="page"></section>
+  <section id="page-728x90"  class="page"></section>
   <section id="page-bespoke" class="page"></section>
-  <section id="page-mocks" class="page"></section>
+  <section id="page-mocks"   class="page"></section>
 
   <section id="page-about" class="page">
     <div class="page-inner">
@@ -184,8 +233,8 @@ body{ font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--dar
       <h1 class="page-title">Dianomi</h1>
       <p class="page-desc">Premium native advertising for the world's most trusted financial content environments.</p>
       <hr class="page-divider">
-      <p style="font-size:14px;line-height:1.8;color:var(--muted);max-width:480px;">Dianomi connects premium financial brands with highly engaged audiences across the world's leading business and financial media. Get in touch to discuss how Dianomi can work for your publication.</p>
-      <a class="about-contact" href="mailto:publishers@dianomi.com">publishers@dianomi.com →</a>
+      <p style="font-size:14px;line-height:1.8;color:var(--muted);max-width:460px;">Dianomi connects premium financial brands with highly engaged audiences across the world's leading business and financial media. Get in touch to discuss how Dianomi can work for your publication.</p>
+      <a class="about-link" href="mailto:publishers@dianomi.com">publishers@dianomi.com →</a>
     </div>
   </section>
 
