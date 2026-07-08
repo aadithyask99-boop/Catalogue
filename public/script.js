@@ -212,17 +212,17 @@ function makeCard(key, v) {
   c.id = 'card-' + key;
 
   if (v.type === 'video') {
-    // Size-specific video unit layout
+    // Size-specific video unit layout — flex-fill guarantees exact real-world dimensions
     if (key === '970x250') {
       c.innerHTML = `
-        <div style="display:flex;width:100%;background:#fff;">
-          <div class="vu-text" style="width:400px;flex-shrink:0;padding:24px 26px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="display:flex;width:970px;max-width:100%;height:250px;background:#fff;">
+          <div class="vu-text" style="flex:1;padding:24px 26px;display:flex;flex-direction:column;justify-content:center;min-width:0;">
             <span class="sp-label">Sponsored Content</span>
             <h3>We go deep on the details so you can scale AI across your business</h3>
             <span class="vu-provider">PWC</span>
             <button class="vu-cta">Learn More</button>
           </div>
-          <div style="flex:1;position:relative;height:250px;background:#000;overflow:hidden;">
+          <div style="width:400px;flex-shrink:0;position:relative;height:100%;background:#e5e7eb;overflow:hidden;">
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
@@ -230,13 +230,13 @@ function makeCard(key, v) {
               <button class="vc-btn pp">⏸</button>
               <button class="vc-btn mu">🔊</button>
             </div>
-            <img class="d-badge" style="left:10px;right:auto;" src="assets/brand/d-icon.svg" alt="">
+            <img class="d-badge" style="left:10px;right:auto;bottom:10px;" src="assets/brand/d-icon.svg" alt="">
           </div>
         </div>`;
     } else if (key === '300x600') {
       c.innerHTML = `
-        <div style="width:300px;background:#fff;">
-          <div style="position:relative;height:225px;background:#000;overflow:hidden;">
+        <div style="width:300px;height:600px;background:#fff;display:flex;flex-direction:column;">
+          <div style="flex:1;min-height:0;position:relative;background:#e5e7eb;overflow:hidden;">
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
@@ -245,9 +245,9 @@ function makeCard(key, v) {
               <button class="vc-btn mu">🔊</button>
             </div>
           </div>
-          <div class="vu-text" style="padding:16px 16px 14px;">
+          <div class="vu-text" style="flex-shrink:0;padding:18px 18px 16px;">
             <span class="sp-label">Sponsored Content</span>
-            <h3 style="font-size:15px;">We go deep on the details so you can scale AI across your business</h3>
+            <h3 style="font-size:16px;">We go deep on the details so you can scale AI across your business</h3>
             <span class="vu-provider">PWC</span>
             <button class="vu-cta">Learn More</button>
           </div>
@@ -255,8 +255,8 @@ function makeCard(key, v) {
         </div>`;
     } else if (key === '300x250') {
       c.innerHTML = `
-        <div style="width:300px;background:#fff;">
-          <div style="position:relative;height:130px;background:#000;overflow:hidden;">
+        <div style="width:300px;height:250px;background:#fff;display:flex;flex-direction:column;">
+          <div style="flex:1;min-height:0;position:relative;background:#e5e7eb;overflow:hidden;">
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
@@ -265,7 +265,7 @@ function makeCard(key, v) {
               <button class="vc-btn mu">🔊</button>
             </div>
           </div>
-          <div class="vu-text" style="padding:10px 13px;">
+          <div class="vu-text" style="flex-shrink:0;padding:12px 14px 10px;">
             <span class="sp-label">Sponsored Content</span>
             <h3 style="font-size:13px;">We go deep on the details so you can scale AI across your business</h3>
             <span class="vu-provider">PWC</span>
@@ -276,8 +276,8 @@ function makeCard(key, v) {
     }
   } else if (v.type === 'video-hybrid') {
     c.innerHTML = `
-      <div style="width:300px;background:#fff;">
-        <div style="position:relative;height:150px;background:#000;overflow:hidden;">
+      <div style="width:300px;height:600px;background:#fff;display:flex;flex-direction:column;">
+        <div style="flex-shrink:0;position:relative;height:170px;background:#e5e7eb;overflow:hidden;">
           <div class="video-shimmer"></div>
           <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
           <button class="lm-btn">Learn More</button>
@@ -286,18 +286,18 @@ function makeCard(key, v) {
             <button class="vc-btn mu">🔊</button>
           </div>
         </div>
-        <div class="vu-text" style="padding:12px 16px 10px;">
+        <div class="vu-text" style="flex-shrink:0;padding:14px 16px 12px;">
           <span class="sp-label">Sponsored Content</span>
           <h3 style="font-size:14px;">We go deep on the details so you can scale AI across your business</h3>
           <span class="vu-provider">PWC</span>
           <button class="vu-cta" style="padding:6px 12px;font-size:12px;">Learn More</button>
         </div>
-        <div style="border-top:1px solid #eceff2;">
-          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #eceff2;text-align:left;">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;border-top:1px solid #eceff2;">
+          <div style="flex:1;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid #eceff2;text-align:left;">
             <div style="width:64px;height:64px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-1" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
             <div style="font-size:12px;line-height:1.35;color:#1a2b4a;font-weight:600;text-align:left;">Get up to AED 14,000 cashback with HSBC Premier<span style="display:block;font-size:10px;color:#8a8f98;font-weight:400;margin-top:3px;">HSBC</span></div>
           </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;text-align:left;">
+          <div style="flex:1;display:flex;align-items:center;gap:12px;padding:0 16px;text-align:left;">
             <div style="width:64px;height:64px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-2" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
             <div style="font-size:12px;line-height:1.35;color:#1a2b4a;font-weight:600;text-align:left;">The Fragmentation Era<span style="display:block;font-size:10px;color:#8a8f98;font-weight:400;margin-top:3px;">PIMCO</span></div>
           </div>
@@ -478,23 +478,19 @@ function renderMocks(el) {
       <div class="page-category">Real Work</div>
       <h1 class="page-title">Publisher Mocks</h1>
       <p class="page-desc">Real implementations across leading financial publishers.</p>
+      <div class="page-meta" id="mmeta"></div>
       <hr class="page-divider">
       <div class="mock-tabs" id="mtabs">
         ${MOCKS.map((m,i)=>`<button class="mock-tab${i===0?' active':''}" data-i="${i}">${m.name}</button>`).join('')}
       </div>
-      <div class="mock-layout">
-        <div class="mock-meta" id="mmeta"></div>
-        <div class="mock-frame-area">
-          <div class="device-toggle" id="dtoggle" style="display:none;">
-            <button class="device-btn active" data-v="desktop">🖥 Desktop</button>
-            <button class="device-btn" data-v="mobile">📱 Mobile</button>
-          </div>
-          <div class="mock-frame" id="mframe">
-            <div class="mock-loading" id="mloading">SELECT A PUBLISHER ABOVE</div>
-            <img id="mimg" src="" alt="" style="display:none;">
-            <div class="scroll-hint" id="mhint">↓ scroll to explore</div>
-          </div>
-        </div>
+      <div class="device-toggle" id="dtoggle" style="display:none;">
+        <button class="device-btn active" data-v="desktop">🖥 Desktop</button>
+        <button class="device-btn" data-v="mobile">📱 Mobile</button>
+      </div>
+      <div class="mock-frame" id="mframe">
+        <div class="mock-loading" id="mloading">SELECT A PUBLISHER ABOVE</div>
+        <img id="mimg" src="" alt="" style="display:none;">
+        <div class="scroll-hint" id="mhint">↓ scroll to explore</div>
       </div>
     </div>`;
 
@@ -526,10 +522,10 @@ function loadMock() {
   const img=$('mimg'), loading=$('mloading');
 
   if(meta) meta.innerHTML=`
-    <div class="mock-meta-item"><div class="meta-label">Publisher</div><div class="meta-value">${m.name}</div></div>
-    <div class="mock-meta-item"><div class="meta-label">Format</div><div class="meta-value">${m.format}</div></div>
-    <div class="mock-meta-item"><div class="meta-label">Placement</div><div class="meta-value">${m.placement}</div></div>
-    <div class="mock-meta-item"><div class="meta-label">Unit Size</div><div class="meta-value">${m.size}</div></div>`;
+    <div><div class="meta-label">Publisher</div><div class="meta-value">${m.name}</div></div>
+    <div><div class="meta-label">Format</div><div class="meta-value">${m.format}</div></div>
+    <div><div class="meta-label">Placement</div><div class="meta-value">${m.placement}</div></div>
+    <div><div class="meta-label">Unit Size</div><div class="meta-value">${m.size}</div></div>`;
 
   if(toggle) toggle.style.display = m.mobile ? 'flex' : 'none';
 
