@@ -16,10 +16,11 @@
 body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);display:flex;height:100vh;overflow:hidden;}
 
 /* ── SIDEBAR ── */
-.sidebar{width:var(--sidebar-w);height:100vh;position:fixed;top:0;left:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;overflow-x:visible;transition:width 220ms ease;}
-.sidebar-logo{padding:24px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;position:relative;min-height:64px;}
+.sidebar{width:var(--sidebar-w);height:100vh;position:fixed;top:0;left:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow:visible;transition:width 220ms ease;}
+.sidebar-logo{padding:24px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;position:relative;min-height:64px;flex-shrink:0;}
 .sidebar-logo img.logo-full{height:17px;}
 .sidebar-logo img.logo-mini{display:none;width:22px;height:22px;}
+.sidebar-scroll{flex:1;overflow-y:auto;overflow-x:hidden;}
 .collapse-btn{position:absolute;top:50%;right:-12px;transform:translateY(-50%);width:24px;height:24px;border:1.5px solid var(--teal);border-radius:5px;background:var(--white);color:var(--teal);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Montserrat',sans-serif;z-index:101;box-shadow:0 1px 6px rgba(0,0,0,0.12);}
 .collapse-btn:hover{background:var(--teal-light);}
 .nav-group{padding:10px 0 4px;}
@@ -73,14 +74,16 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 
 /* ── UNIT STAGE ── */
 .unit-stage-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
-.unit-frame{background:#EBEBEB;border:1.5px solid var(--teal);border-radius:14px;padding:24px;display:flex;align-items:center;justify-content:center;}
-.unit-stage{perspective:1600px;position:relative;}
+.unit-frame{background:#EBEBEB;border:1.5px solid var(--teal);border-radius:14px;padding:24px;display:inline-flex;align-items:center;justify-content:center;max-width:100%;}
+.unit-stage{perspective:1600px;position:relative;max-width:100%;}
 .unit-card{border-radius:8px;box-shadow:var(--shadow);overflow:hidden;position:relative;backface-visibility:hidden;background:#fff;}
-.unit-card img.main-img{display:block;width:100%;height:auto;}
-.size-970 .unit-card{max-width:min(970px,100%);}
-.size-600 .unit-card{width:300px;}
-.size-250 .unit-card{width:300px;}
-.size-90  .unit-card{max-width:min(728px,100%);}
+
+/* Fixed IAB dimensions — card never changes size between formats, eliminates container jump */
+.size-970 .unit-card{width:min(970px,100%);height:250px;}
+.size-600 .unit-card{width:300px;height:600px;}
+.size-250 .unit-card{width:300px;height:250px;}
+.size-90  .unit-card{width:min(728px,100%);height:90px;}
+.unit-card img.main-img{display:block;width:100%;height:100%;object-fit:contain;background:#fff;}
 
 /* ── VAR NAV ── */
 .variation-nav{display:flex;align-items:center;gap:12px;}
@@ -106,9 +109,10 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 .vu-cta{background:#1f4fd8;color:#fff;border:none;padding:9px 18px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;align-self:flex-start;}
 
 /* ── MOCKS ── */
-.mock-frame{width:100%;flex:1;min-height:0;border-radius:10px;border:2px solid var(--teal);box-shadow:var(--shadow);overflow:hidden;overflow-y:scroll;position:relative;}
+.mock-frame{width:100%;flex:1;min-height:0;max-height:calc(100vh - 130px);border-radius:10px;border:2px solid var(--teal);box-shadow:var(--shadow);overflow:hidden;overflow-y:scroll;position:relative;}
 .mock-frame img{display:block;width:100%;height:auto;}
 .mock-frame.mobile-view{width:375px;margin:0 auto;border-radius:28px;border:3px solid var(--teal);}
+.mock-right-wrap{display:flex;flex-direction:column;width:100%;max-width:860px;flex:1;min-height:0;gap:14px;overflow:hidden;}
 .browser-chrome{background:#f1f3f4;border-bottom:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .browser-dots{display:flex;gap:5px;}
 .browser-dots span{width:10px;height:10px;border-radius:50%;display:block;}
@@ -119,7 +123,6 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 .mock-loading{display:flex;align-items:center;justify-content:center;height:200px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:0.06em;}
 .scroll-hint{position:sticky;bottom:10px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.05em;color:var(--muted);pointer-events:none;transition:opacity 400ms;padding:5px;}
 .scroll-hint.hidden{opacity:0;}
-.mock-right-wrap{display:flex;flex-direction:column;width:100%;flex:1;min-height:0;gap:14px;overflow:hidden;}
 
 /* ── HERO ── */
 .hero-inner{min-height:100vh;background:var(--teal);display:flex;align-items:center;padding:0 80px;gap:60px;}
@@ -145,6 +148,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
     <img src="assets/brand/d-icon.svg" alt="D" class="logo-mini">
     <button class="collapse-btn" id="collapseBtn"><span id="collapseIcon">‹</span></button>
   </div>
+  <div class="sidebar-scroll">
   <div class="nav-group">
     <span class="nav-item" data-page="hero">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l9-9 9 9"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg>
@@ -194,6 +198,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
       <span class="nav-label">About</span>
     </span>
+  </div>
   </div>
 </nav>
 
