@@ -15,6 +15,26 @@ async function fetchStockClip(query) {
   return file?.link || null;
 }
 
+async function fetchStockPhoto(query) {
+  const res = await fetch(
+    `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`,
+    { headers: { Authorization: PEXELS_API_KEY } }
+  );
+  if (!res.ok) throw new Error(`Pexels photo API error: ${res.status}`);
+  const data = await res.json();
+  return data.photos?.[0]?.src?.medium || null;
+}
+
+function initListThumbs(unit) {
+  unit.querySelectorAll('.list-thumb').forEach(thumb => {
+    const query = thumb.dataset.photoQuery || 'business';
+    const img = thumb.querySelector('img');
+    fetchStockPhoto(query)
+      .then(url => { if (url) img.src = url; })
+      .catch(err => console.error('Photo load failed for', query, err));
+  });
+}
+
 function initUnit(unit) {
   const query = unit.dataset.query || 'business';
   const video = unit.querySelector('video');
@@ -55,4 +75,7 @@ function initUnit(unit) {
   });
 }
 
-document.querySelectorAll('.unit').forEach(initUnit);
+document.querySelectorAll('.unit').forEach(unit => {
+  initUnit(unit);
+  initListThumbs(unit);
+});
