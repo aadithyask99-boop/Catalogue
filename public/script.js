@@ -10,7 +10,7 @@ const UNITS = {
     videoQuery:'business finance',
     blurbs:[
       'Reaches highly engaged readers mid-content, where attention is highest and native formats perform best.',
-      'Supports native, display, video and canvas — one placement, full format flexibility across any campaign type.',
+      'Supports native, display, video and canvas - one placement, full format flexibility across any campaign type.',
       'Full-width visibility ensures maximum brand impact without disrupting the editorial flow of the page.'
     ],
     formats:{
@@ -32,8 +32,8 @@ const UNITS = {
     dimensions:'300×600', placement:'Right rail',
     videoQuery:'office team',
     blurbs:[
-      'Premium right rail real estate that holds attention longer than standard display — readers scroll past, units stay in view.',
-      'Accommodates native, video, display, canvas and gift guide formats — ideal for both brand awareness and direct response.',
+      'Premium right rail real estate that holds attention longer than standard display - readers scroll past, units stay in view.',
+      'Accommodates native, video, display, canvas and gift guide formats - ideal for both brand awareness and direct response.',
       'Consistent right-side placement builds familiarity and trust, driving higher engagement over the course of a session.'
     ],
     formats:{
@@ -63,7 +63,7 @@ const UNITS = {
     dimensions:'300×250', placement:'In-content / right rail',
     videoQuery:'finance city',
     blurbs:[
-      'One of the most widely supported ad sizes across financial and business publishing — versatile and proven.',
+      'One of the most widely supported ad sizes across financial and business publishing - versatile and proven.',
       'Placed mid-content, it intercepts readers at moments of active engagement with article material.',
       'Supports the full format stack: native, display, video, canvas and gift guide across desktop and mobile.'
     ],
@@ -84,9 +84,9 @@ const UNITS = {
     desc:'Slim top-of-page native and canvas placement.',
     dimensions:'728×90', placement:'Top of page',
     blurbs:[
-      'Slim, unobtrusive, and seen first — the leaderboard sits at the top of the page where every reader starts.',
+      'Slim, unobtrusive, and seen first - the leaderboard sits at the top of the page where every reader starts.',
       'Native and canvas formats maintain editorial quality while delivering clear brand messaging at page entry.',
-      'High viewability by default — above-the-fold placement on every article page, every session.'
+      'High viewability by default - above-the-fold placement on every article page, every session.'
     ],
     formats:{
       'Native':[
@@ -104,7 +104,7 @@ const MOCKS = [
     category:'NATIVE CAPABILITY', title:'Dianomi in the wild.',
     desc:'A scrollable publisher page showing exactly how the Dianomi native widget integrates at the end of an article.',
     blurbs:[
-      'Contextual placement at the article end captures readers who have completed content — the highest intent moment of any session.',
+      'Contextual placement at the article end captures readers who have completed content - the highest intent moment of any session.',
       'The 300×600 native list format adapts to the publisher\'s editorial style, appearing as a natural extension of the feed.',
       'Multiple ad slots within a single unit increase yield without adding page clutter or disrupting the reading experience.'
     ],
@@ -267,7 +267,7 @@ function makeCard(key, v) {
   if (v.type === 'video') {
     if (key === '970x250') {
       c.innerHTML = `
-        <div style="display:flex;width:970px;max-width:100%;height:250px;background:#fff;position:relative;">
+        <div style="display:flex;width:100%;max-width:970px;height:250px;background:#fff;position:relative;">
           <div class="vu-text" style="flex:1;padding:24px 26px;display:flex;flex-direction:column;justify-content:center;min-width:0;">
             <span class="sp-label">Sponsored Content</span>
             <h3>We go deep on the details so you can scale AI across your business</h3>
