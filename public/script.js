@@ -222,14 +222,16 @@ function renderUnitPage(key, el) {
         <div class="format-tabs" id="tabs-${key}">
           ${fmts.map(f=>`<button class="format-tab${f===s.format?' active':''}" data-f="${f}">${f}</button>`).join('')}
         </div>
-        <div class="unit-stage-wrap ${SIZE_CLASS[key]||''}">
-          <div class="unit-frame"><div id="stage-${key}" class="unit-stage"></div></div>
-          <div class="variation-nav" id="vnav-${key}">
-            <button class="var-arrow" id="prev-${key}">←</button>
-            <div class="var-dots" id="dots-${key}"></div>
-            <button class="var-arrow" id="next-${key}">→</button>
+        <div class="unit-center-group">
+          <div class="unit-stage-wrap ${SIZE_CLASS[key]||''}">
+            <div class="unit-frame-scaler"><div class="unit-frame"><div id="stage-${key}" class="unit-stage"></div></div></div>
+            <div class="variation-nav" id="vnav-${key}">
+              <button class="var-arrow" id="prev-${key}">←</button>
+              <div class="var-dots" id="dots-${key}"></div>
+              <button class="var-arrow" id="next-${key}">→</button>
+            </div>
+            <div class="var-caption" id="cap-${key}"></div>
           </div>
-          <div class="var-caption" id="cap-${key}"></div>
         </div>
       </div>
     </div>`;
@@ -256,7 +258,39 @@ function drawStage(key) {
   const t = vars[s.varIdx].type;
   if (t === 'video' || t === 'video-hybrid') initVideo(key);
   if (t === 'video-hybrid') initHybridThumbs(key);
+  requestAnimationFrame(() => fitStage(key));
 }
+
+// Proportionally scale the unit frame down if it doesn't fit the available vertical space —
+// keeps the whole unit visible without forcing scroll, instead of clipping or overflowing.
+function fitStage(key) {
+  const el = document.getElementById('page-' + key);
+  if (!el) return;
+  const group  = el.querySelector('.unit-center-group');
+  const scaler = el.querySelector('.unit-frame-scaler');
+  const frame  = el.querySelector('.unit-frame');
+  if (!group || !scaler || !frame) return;
+
+  frame.style.transform = 'none';
+  scaler.style.height = 'auto';
+
+  const availH  = group.clientHeight;
+  const naturalH = group.scrollHeight;
+
+  if (naturalH > availH && availH > 0) {
+    const scale = Math.max(0.55, (availH / naturalH) * 0.97);
+    frame.style.transform = `scale(${scale})`;
+    frame.style.transformOrigin = 'top center';
+    scaler.style.height = (frame.offsetHeight * scale) + 'px';
+  }
+}
+
+window.addEventListener('resize', () => {
+  clearTimeout(window._fitResizeT);
+  window._fitResizeT = setTimeout(() => {
+    Object.keys(UNITS).forEach(k => { if (uState[k]) fitStage(k); });
+  }, 120);
+});
 
 // ── CARD BUILDER ──────────────────────────────────────────────────────────────
 function makeCard(key, v) {
@@ -593,7 +627,27 @@ document.getElementById('collapseBtn').addEventListener('click',()=>{
   const icon=document.getElementById('collapseIcon');
   const collapsed=sb.classList.toggle('collapsed');
   if (icon) icon.textContent=collapsed?'›':'‹';
+  resetInactivityTimer();
 });
+
+// Auto-collapse the sidebar after 5s of inactivity for the best viewing experience.
+// Only ever collapses — never auto-expands. Manual toggle click remains the only way to open it.
+let inactivityTimer;
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(()=>{
+    const sb=document.getElementById('sidebar');
+    const icon=document.getElementById('collapseIcon');
+    if (sb && !sb.classList.contains('collapsed')) {
+      sb.classList.add('collapsed');
+      if (icon) icon.textContent='›';
+    }
+  }, 5000);
+}
+['mousemove','mousedown','keydown','wheel','touchstart'].forEach(evt=>
+  document.addEventListener(evt, resetInactivityTimer, {passive:true})
+);
+resetInactivityTimer();
 
 // ── UTIL ──────────────────────────────────────────────────────────────────────
 function $(id){ return document.getElementById(id); }
