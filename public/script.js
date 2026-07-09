@@ -288,13 +288,13 @@ function makeCard(key, v) {
     } else if (key === '300x600') {
       c.innerHTML = `
         <div style="width:300px;height:600px;background:#fff;display:flex;flex-direction:column;position:relative;">
-          <div style="flex:1;min-height:0;position:relative;background:#e5e7eb;overflow:hidden;">
+          <div style="height:316px;flex-shrink:0;position:relative;background:#e5e7eb;overflow:hidden;">
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
             <div class="vc-overlay"><button class="vc-btn pp">⏸</button><button class="vc-btn mu">🔊</button></div>
           </div>
-          <div class="vu-text" style="flex-shrink:0;padding:16px 18px 14px;">
+          <div class="vu-text" style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:16px 18px 14px;">
             <span class="sp-label">Sponsored Content</span>
             <h3 style="font-size:15px;">We go deep on the details so you can scale AI across your business</h3>
             <span class="vu-provider">PWC</span>
@@ -323,7 +323,7 @@ function makeCard(key, v) {
   } else if (v.type === 'video-hybrid') {
     c.innerHTML = `
       <div style="width:300px;height:600px;background:#fff;display:flex;flex-direction:column;position:relative;">
-        <div style="flex-shrink:0;height:170px;position:relative;background:#e5e7eb;overflow:hidden;">
+        <div style="flex:1;min-height:0;position:relative;background:#e5e7eb;overflow:hidden;">
           <div class="video-shimmer"></div>
           <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
           <button class="lm-btn">Learn More</button>
@@ -335,13 +335,13 @@ function makeCard(key, v) {
           <span class="vu-provider">PWC</span>
           <button class="vu-cta" style="font-size:12px;padding:6px 12px;">Learn More</button>
         </div>
-        <div style="flex:1;min-height:0;display:flex;flex-direction:column;border-top:1px solid #eceff2;">
-          <div style="flex:1;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid #eceff2;">
-            <div style="width:64px;height:64px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-1" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
+        <div style="flex-shrink:0;display:flex;flex-direction:column;border-top:1px solid #eceff2;">
+          <div style="height:88px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid #eceff2;">
+            <div style="width:56px;height:56px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-1" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
             <div style="font-size:12px;line-height:1.35;color:#1a2b4a;font-weight:600;">Get up to AED 14,000 cashback with HSBC Premier<span style="display:block;font-size:10px;color:#8a8f98;font-weight:400;margin-top:3px;">HSBC</span></div>
           </div>
-          <div style="flex:1;display:flex;align-items:center;gap:12px;padding:0 16px;">
-            <div style="width:64px;height:64px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-2" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
+          <div style="height:88px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 16px;">
+            <div style="width:56px;height:56px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e5e7eb;"><img class="hy-thumb-2" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""></div>
             <div style="font-size:12px;line-height:1.35;color:#1a2b4a;font-weight:600;">The Fragmentation Era<span style="display:block;font-size:10px;color:#8a8f98;font-weight:400;margin-top:3px;">PIMCO</span></div>
           </div>
         </div>
