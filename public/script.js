@@ -181,6 +181,8 @@ function navigate(page, mockIdx) {
   } else if (!el.dataset.rendered && page !== 'hero' && page !== 'about') {
     renderPage(page, el);
   }
+
+  scheduleAutoCollapse();
 }
 
 document.querySelectorAll('.nav-item[data-page]').forEach(n => {
@@ -261,22 +263,14 @@ function drawStage(key) {
   requestAnimationFrame(() => fitStage(key));
 }
 
-// Proportionally scale the unit frame down if it doesn't fit the available vertical space —
+// Proportionally scale a frame down if it doesn't fit the available vertical space —
 // keeps the whole unit visible without forcing scroll, instead of clipping or overflowing.
-function fitStage(key) {
-  const el = document.getElementById('page-' + key);
-  if (!el) return;
-  const group  = el.querySelector('.unit-center-group');
-  const scaler = el.querySelector('.unit-frame-scaler');
-  const frame  = el.querySelector('.unit-frame');
+function fitToViewport(group, scaler, frame) {
   if (!group || !scaler || !frame) return;
-
   frame.style.transform = 'none';
   scaler.style.height = 'auto';
-
-  const availH  = group.clientHeight;
+  const availH = group.clientHeight;
   const naturalH = group.scrollHeight;
-
   if (naturalH > availH && availH > 0) {
     const scale = Math.max(0.55, (availH / naturalH) * 0.97);
     frame.style.transform = `scale(${scale})`;
@@ -284,11 +278,22 @@ function fitStage(key) {
     scaler.style.height = (frame.offsetHeight * scale) + 'px';
   }
 }
+function fitStage(key) {
+  const el = document.getElementById('page-' + key);
+  if (!el) return;
+  fitToViewport(el.querySelector('.unit-center-group'), el.querySelector('.unit-frame-scaler'), el.querySelector('.unit-frame'));
+}
+function fitMockStage() {
+  const el = document.getElementById('page-mocks');
+  if (!el) return;
+  fitToViewport(el.querySelector('.unit-center-group'), el.querySelector('.mock-frame-scaler'), el.querySelector('.mock-frame'));
+}
 
 window.addEventListener('resize', () => {
   clearTimeout(window._fitResizeT);
   window._fitResizeT = setTimeout(() => {
     Object.keys(UNITS).forEach(k => { if (uState[k]) fitStage(k); });
+    fitMockStage();
   }, 120);
 });
 
@@ -530,28 +535,33 @@ function renderMocks(el) {
   el.innerHTML = `
     <div class="unit-layout">
       <div class="unit-left" id="mock-left"></div>
-      <div class="unit-right" style="padding:28px 32px;justify-content:flex-start;">
-        <div class="mock-right-wrap">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div class="device-toggle" id="dtoggle" style="display:none;">
-              <button class="device-btn active" data-v="desktop">🖥 Desktop</button>
-              <button class="device-btn" data-v="mobile">📱 Mobile</button>
-            </div>
-            <div style="flex:1;"></div>
+      <div class="unit-right">
+        <div class="device-toggle-row">
+          <div class="device-toggle" id="dtoggle" style="display:none;">
+            <button class="device-btn active" data-v="desktop">🖥 Desktop</button>
+            <button class="device-btn" data-v="mobile">📱 Mobile</button>
           </div>
-          <div class="mock-frame" id="mframe">
-            <div class="browser-chrome">
-              <div class="browser-dots">
-                <span style="background:#ff5f57;"></span>
-                <span style="background:#febc2e;"></span>
-                <span style="background:#28c840;"></span>
+        </div>
+        <div class="unit-center-group">
+          <div class="mock-right-wrap">
+            <div class="mock-frame-scaler">
+              <div class="mock-frame" id="mframe">
+                <div class="browser-chrome">
+                  <div class="browser-dots">
+                    <span style="background:#ff5f57;"></span>
+                    <span style="background:#febc2e;"></span>
+                    <span style="background:#28c840;"></span>
+                  </div>
+                  <div class="browser-url">publisher.com</div>
+                </div>
+                <div class="mock-scroll-body" id="mscroll">
+                  <div class="mock-loading" id="mloading">Loading...</div>
+                  <img id="mimg" src="" alt="" style="display:none;">
+                </div>
               </div>
-              <div class="browser-url">publisher.com</div>
             </div>
-            <div class="mock-loading" id="mloading">Loading...</div>
-            <img id="mimg" src="" alt="" style="display:none;">
+            <div class="scroll-hint" id="mhint">↓ scroll to explore</div>
           </div>
-          <div class="scroll-hint" id="mhint">↓ scroll to explore</div>
         </div>
       </div>
     </div>`;
@@ -563,8 +573,8 @@ function renderMocks(el) {
       applyMockView();
     })
   );
-  const frame=$('mframe'), hint=$('mhint');
-  if (frame&&hint) frame.addEventListener('scroll',()=>hint.classList.add('hidden'),{once:true});
+  const scrollBody=$('mscroll'), hint=$('mhint');
+  if (scrollBody&&hint) scrollBody.addEventListener('scroll',()=>hint.classList.add('hidden'),{once:true});
 
   loadMockLeft();
   loadMockImg();
@@ -589,12 +599,12 @@ function loadMockLeft() {
 
 function loadMockImg() {
   const m=MOCKS[mState.idx];
-  const toggle=$('dtoggle'), frame=$('mframe');
+  const toggle=$('dtoggle'), scrollBody=$('mscroll');
   const img=$('mimg'), loading=$('mloading'), hint=$('mhint');
 
   if (toggle) toggle.style.display=m.mobile?'flex':'none';
   if (hint) hint.classList.remove('hidden');
-  if (frame) { frame.scrollTop=0; frame.style.opacity='0'; frame.style.transition='opacity 150ms'; }
+  if (scrollBody) { scrollBody.scrollTop=0; scrollBody.style.opacity='0'; scrollBody.style.transition='opacity 150ms'; }
   if (loading) { loading.textContent='Loading…'; loading.style.display='flex'; }
   if (img) img.style.display='none';
 
@@ -603,12 +613,14 @@ function loadMockImg() {
   loader.onload=()=>{
     if (img){ img.src=src; img.style.display='block'; }
     if (loading) loading.style.display='none';
-    if (frame) frame.style.opacity='1';
+    if (scrollBody) scrollBody.style.opacity='1';
+    fitMockStage();
   };
   loader.onerror=()=>{ if(loading) loading.textContent='Could not load'; };
   loader.src=src;
 
   applyMockView();
+  fitMockStage();
 }
 
 function applyMockView() {
@@ -627,27 +639,24 @@ document.getElementById('collapseBtn').addEventListener('click',()=>{
   const icon=document.getElementById('collapseIcon');
   const collapsed=sb.classList.toggle('collapsed');
   if (icon) icon.textContent=collapsed?'›':'‹';
-  resetInactivityTimer();
+  if (!collapsed) scheduleAutoCollapse(); // just reopened — give them 5s before it auto-hides again
+  else clearTimeout(exploreTimer);
 });
 
-// Auto-collapse the sidebar after 5s of inactivity for the best viewing experience.
-// Only ever collapses — never auto-expands. Manual toggle click remains the only way to open it.
-let inactivityTimer;
-function resetInactivityTimer() {
-  clearTimeout(inactivityTimer);
-  inactivityTimer = setTimeout(()=>{
-    const sb=document.getElementById('sidebar');
+// Auto-collapse the sidebar 5s after the viewer lands on a page, so they get the full-width
+// view shortly after they start exploring. NOT tied to general activity — clicking around
+// inside a page (format tabs, arrows, publisher tabs) does not reset or cancel this.
+let exploreTimer;
+function scheduleAutoCollapse() {
+  clearTimeout(exploreTimer);
+  const sb=document.getElementById('sidebar');
+  if (!sb || sb.classList.contains('collapsed')) return;
+  exploreTimer = setTimeout(()=>{
+    sb.classList.add('collapsed');
     const icon=document.getElementById('collapseIcon');
-    if (sb && !sb.classList.contains('collapsed')) {
-      sb.classList.add('collapsed');
-      if (icon) icon.textContent='›';
-    }
+    if (icon) icon.textContent='›';
   }, 5000);
 }
-['mousemove','mousedown','keydown','wheel','touchstart'].forEach(evt=>
-  document.addEventListener(evt, resetInactivityTimer, {passive:true})
-);
-resetInactivityTimer();
 
 // ── UTIL ──────────────────────────────────────────────────────────────────────
 function $(id){ return document.getElementById(id); }
