@@ -1,6 +1,16 @@
 'use strict';
 const PEXELS_KEY = '1OzprTAbWQCPVn9OoF02cSelNJetTLGwYjF6wR186DB4sDCgUZSJ2Qg3';
 
+// Flat glyph icons for video controls — no circular button chrome, just the glyph with a
+// drop-shadow for contrast against varying video content.
+const ICON_PLAY  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))"><path d="M6 4l14 8-14 8V4z"/></svg>';
+const ICON_PAUSE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#fff" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>';
+const ICON_VOL   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16.5 8.5a5 5 0 010 7" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>';
+const ICON_MUTE  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16 9l5 6M21 9l-5 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>';
+function vcOverlay() {
+  return `<div class="vc-overlay"><button class="vc-btn pp">${ICON_PAUSE}</button><button class="vc-btn mu">${ICON_VOL}</button></div>`;
+}
+
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const UNITS = {
   '970x250':{
@@ -317,10 +327,7 @@ function makeCard(key, v) {
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
-            <div class="vc-overlay">
-              <button class="vc-btn pp">⏸</button>
-              <button class="vc-btn mu">🔊</button>
-            </div>
+            ${vcOverlay()}
           </div>
           <img class="d-badge" src="assets/brand/d-icon.svg" alt="">
         </div>`;
@@ -331,15 +338,17 @@ function makeCard(key, v) {
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
-            <div class="vc-overlay"><button class="vc-btn pp">⏸</button><button class="vc-btn mu">🔊</button></div>
+            ${vcOverlay()}
           </div>
-          <div class="vu-text" style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:16px 18px 14px;">
+          <div class="vu-text" style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 22px;">
             <span class="sp-label">Sponsored Content</span>
-            <h3 style="font-size:15px;">We go deep on the details so you can scale AI across your business</h3>
+            <h3 style="font-size:20px;">We go deep on the details so you can scale AI across your business</h3>
             <span class="vu-provider">PWC</span>
             <button class="vu-cta">Learn More</button>
           </div>
-          <img class="d-badge" src="assets/brand/d-icon.svg" alt="">
+          <div style="display:flex;justify-content:center;padding-bottom:14px;flex-shrink:0;">
+            <img src="assets/brand/d-icon.svg" style="width:16px;height:16px;opacity:0.55;">
+          </div>
         </div>`;
     } else if (key === '300x250') {
       c.innerHTML = `
@@ -348,7 +357,7 @@ function makeCard(key, v) {
             <div class="video-shimmer"></div>
             <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button class="lm-btn">Learn More</button>
-            <div class="vc-overlay"><button class="vc-btn pp">⏸</button><button class="vc-btn mu">🔊</button></div>
+            ${vcOverlay()}
           </div>
           <div class="vu-text" style="flex-shrink:0;padding:10px 13px 8px;">
             <span class="sp-label">Sponsored Content</span>
@@ -356,7 +365,7 @@ function makeCard(key, v) {
             <span class="vu-provider">PWC</span>
             <button class="vu-cta" style="font-size:11px;padding:6px 12px;">Learn More</button>
           </div>
-          <img class="d-badge" src="assets/brand/d-icon.svg" alt="">
+          <img class="d-badge" style="left:auto;right:10px;" src="assets/brand/d-icon.svg" alt="">
         </div>`;
     }
   } else if (v.type === 'video-hybrid') {
@@ -366,7 +375,7 @@ function makeCard(key, v) {
           <div class="video-shimmer"></div>
           <video muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
           <button class="lm-btn">Learn More</button>
-          <div class="vc-overlay"><button class="vc-btn pp">⏸</button><button class="vc-btn mu">🔊</button></div>
+          ${vcOverlay()}
         </div>
         <div class="vu-text" style="flex-shrink:0;padding:14px 16px 10px;">
           <span class="sp-label">Sponsored Content</span>
@@ -509,16 +518,16 @@ function initVideo(key) {
     video.src=url;
     video.addEventListener('canplay',()=>{
       shimmer&&(shimmer.style.display='none');
-      video.play().catch(()=>{ if(pp) pp.textContent='▶'; });
+      video.play().catch(()=>{ if(pp) pp.innerHTML=ICON_PLAY; });
     },{once:true});
   });
   pp&&pp.addEventListener('click',()=>{
-    if(video.paused){video.play();pp.textContent='⏸';}
-    else{video.pause();pp.textContent='▶';}
+    if(video.paused){video.play();pp.innerHTML=ICON_PAUSE;}
+    else{video.pause();pp.innerHTML=ICON_PLAY;}
   });
   mu&&mu.addEventListener('click',()=>{
     video.muted=!video.muted;
-    mu.textContent=video.muted?'🔇':'🔊';
+    mu.innerHTML=video.muted?ICON_MUTE:ICON_VOL;
   });
 }
 function initHybridThumbs(key) {
