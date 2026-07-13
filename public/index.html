@@ -22,7 +22,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 .sidebar-logo img.logo-mini{display:none;width:22px;height:22px;}
 .sidebar-scroll{flex:1;overflow-y:auto;overflow-x:hidden;}
 .collapse-btn{position:absolute;top:50%;right:-12px;transform:translateY(-50%);width:24px;height:24px;border:1.5px solid var(--teal);border-radius:5px;background:var(--white);color:var(--teal);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Montserrat',sans-serif;z-index:101;box-shadow:0 1px 6px rgba(0,0,0,0.12);}
-.collapse-btn:hover{background:var(--teal-light);}
+.collapse-btn:hover{background:var(--teal);color:var(--white);transition:background 120ms,color 120ms;}
 .nav-group{padding:10px 0 4px;}
 .nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;padding:0 24px 6px;display:block;white-space:nowrap;}
 .nav-item{display:flex;align-items:center;gap:11px;padding:9px 24px;font-size:12px;font-weight:600;color:var(--dark);cursor:pointer;border-left:3px solid transparent;transition:color 120ms,background 120ms,border-color 120ms;user-select:none;white-space:nowrap;}
@@ -49,7 +49,8 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 .sidebar.collapsed ~ .main{margin-left:64px;}
 .page{display:none;height:100vh;}
 .page.active{display:block;}
-#page-hero.active,#page-about.active{overflow-y:auto;}
+#page-hero.active{overflow-y:auto;}
+#page-about.active{overflow-y:auto;display:flex;align-items:center;}
 
 /* ── TWO-COLUMN LAYOUT ── */
 .unit-layout{display:flex;height:100vh;overflow:hidden;}
@@ -102,7 +103,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 .video-shimmer{position:absolute;inset:0;background:linear-gradient(90deg,#ccc,#e0e0e0,#ccc);background-size:200% 100%;animation:shimmer 1.4s infinite;z-index:2;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .vc-overlay{position:absolute;bottom:10px;left:10px;display:flex;gap:8px;z-index:3;}
-.vc-btn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,0.55);color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;}
+.vc-btn{width:20px;height:20px;border-radius:0;border:none;background:none;padding:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .vc-btn:hover{background:rgba(0,0,0,0.8);}
 .lm-btn{position:absolute;top:12px;right:12px;background:#fff;color:var(--dark);border:none;padding:7px 12px;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;z-index:3;}
 .vu-text .sp-label{font-size:10px;font-weight:700;letter-spacing:0.08em;color:#5b6b85;text-transform:uppercase;display:block;margin-bottom:7px;}
@@ -141,8 +142,16 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 .hero-d{font-size:280px;font-weight:700;color:rgba(255,255,255,0.07);line-height:1;user-select:none;}
 
 /* ── ABOUT ── */
-.about-inner{padding:52px 64px;max-width:640px;margin:0 auto;}
-.about-link{margin-top:28px;font-size:13px;font-weight:700;color:var(--teal);text-decoration:none;display:inline-block;}
+.about-inner{padding:60px 0 60px 64px;max-width:460px;flex-shrink:0;}
+.about-badge{position:fixed;top:28px;right:28px;width:46px;height:46px;background:#0d1526;border-radius:6px;padding:13px;box-sizing:border-box;filter:brightness(0) invert(1);z-index:10;}
+.about-title{font-size:36px;font-weight:600;color:var(--dark);margin:0 0 16px;}
+.about-link{font-size:14px;font-weight:700;color:var(--teal);text-decoration:underline;display:inline-block;}
+.about-office{margin-top:30px;}
+.about-office-name{font-size:12px;font-weight:700;letter-spacing:0.03em;color:var(--dark);margin-bottom:9px;}
+.about-office-addr{font-size:13px;color:var(--muted);line-height:1.75;}
+.about-visual{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 64px 60px 0;}
+.about-square{width:100%;max-width:400px;aspect-ratio:1/1;border:1.5px solid var(--teal);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.about-square img{width:70%;}
 </style>
 </head>
 <body>
@@ -228,12 +237,25 @@ body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--dark);
 
   <section id="page-about" class="page">
     <div class="about-inner">
-      <div class="page-category" style="margin-top:52px;">About</div>
-      <h1 class="page-title" style="font-size:38px;margin-bottom:12px;">Dianomi</h1>
-      <p class="page-desc">Premium native advertising for the world's most trusted financial content environments.</p>
-      <hr class="page-divider">
-      <p style="font-size:14px;line-height:1.8;color:var(--muted);">Dianomi connects premium financial brands with highly engaged audiences across the world's leading business and financial media. Get in touch to discuss how Dianomi can work for your publication.</p>
-      <a class="about-link" href="mailto:publishers@dianomi.com">publishers@dianomi.com →</a>
+      <img class="about-badge" src="assets/brand/d-icon.svg" alt="">
+      <div class="page-category">What next?</div>
+      <h1 class="about-title">Get in touch</h1>
+      <a class="about-link" href="mailto:enquiries@dianomi.com">enquiries@dianomi.com</a>
+      <div class="about-office">
+        <div class="about-office-name">United Kingdom &amp; Europe</div>
+        <div class="about-office-addr">Dianomi plc, 84 Eccleston Square,<br>London, SW1V 1PX<br>enquiries@dianomi.com</div>
+      </div>
+      <div class="about-office">
+        <div class="about-office-name">United States &amp; Canada</div>
+        <div class="about-office-addr">Dianomi Inc., 575 Lexington Avenue<br>Floor 17, New York, NY 10022<br>enquiries@dianomi.com</div>
+      </div>
+      <div class="about-office">
+        <div class="about-office-name">Australia &amp; Asia</div>
+        <div class="about-office-addr">Dianomi Pty Ltd, Level 11, 10 Carrington<br>Street, Sydney, NSW 2000, Australia<br>enquiries@dianomi.com</div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="about-square"><img src="assets/brand/dianomi-logo.svg" alt="Dianomi"></div>
     </div>
   </section>
 </main>
