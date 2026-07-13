@@ -168,6 +168,7 @@ const SIZE_CLASS = {'970x250':'size-970','300x600':'size-600','300x250':'size-25
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
 function navigate(page, mockIdx) {
+  document.body.classList.toggle('on-hero', page === 'hero');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
@@ -344,7 +345,7 @@ function makeCard(key, v) {
             <span class="sp-label">Sponsored Content</span>
             <h3 style="font-size:20px;">We go deep on the details so you can scale AI across your business</h3>
             <span class="vu-provider">PWC</span>
-            <button class="vu-cta">Learn More</button>
+            <button class="vu-cta" style="align-self:center;">Learn More</button>
           </div>
           <div style="display:flex;justify-content:center;padding-bottom:14px;flex-shrink:0;">
             <img src="assets/brand/d-icon.svg" style="width:16px;height:16px;opacity:0.55;">
